@@ -31,7 +31,9 @@ const client = generateClient({
   authMode: "userPool",
 });
 
-
+function strip_extension(fname) {
+  return fname.replace(/\.[^/.]+$/, "")
+}
 
 export default function App() {
   const [notes, setNotes] = useState([]);
@@ -41,17 +43,16 @@ export default function App() {
   const [sectionSel, setSectionSel] = useState('');
   const [sectionText, setSectionText] = useState([]);
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
 
   async function fetchNotes() {
     const { data: notes } = await client.models.Note.list();
+    const partName = strip_extension(partJsonFile)
     await Promise.all(
       notes.map(async (note) => {
         if (note.image) {
           const linkToStorageFile = await getUrl({
-            path: ({ identityId }) => `user_media/${identityId}/${note.image}`,
+            path: ({ identityId }) => `user_media/${identityId}/${partName}/${sectionSel}/${note.image}`,
+            expiresIn: 60,
           });
           console.log(linkToStorageFile.url);
           note.image = linkToStorageFile.url;
@@ -63,28 +64,30 @@ export default function App() {
     setNotes(notes);
   }
 
-  async function createNote(event) {
-    event.preventDefault();
-    const form = new FormData(event.target);
-    console.log(form.get("image").name);
+  useEffect(() => {
+    fetchNotes();
+  }, [sectionSel]);
+
+
+  async function createNote(blob) {
+
+    const date_str = (new Date).toISOString()
+    const partName = strip_extension(partJsonFile)
 
     const { data: newNote } = await client.models.Note.create({
-      name: form.get("name"),
-      description: form.get("description"),
-      image: form.get("image").name,
+      name: partName,
+      description: sectionSel,
+      image: `${date_str}.webm`,
     });
 
     console.log(newNote);
-    if (newNote.image)
-      if (newNote.image)
-        await uploadData({
-          path: ({ identityId }) => `user_media/${identityId}/${newNote.image}`,
-
-          data: form.get("image"),
-        }).result;
+    await uploadData({
+      path: ({ identityId }) => `user_media/${identityId}/${partName}/${sectionSel}/${newNote.image}`,
+      data: blob,
+    }).result;
 
     fetchNotes();
-    event.target.reset();
+    //event.target.reset();
   }
 
   async function deleteNote({ id }) {
@@ -215,15 +218,16 @@ export default function App() {
           width="70%"
           margin="0 auto"
         >
-          <Heading level={1}>My Notes App</Heading>
-          <View>
+          <Heading level={1}>THE SOUND OF FRENCH</Heading>
+          <Flex>
             <PartsSelectField />
             <ExerciseSelectField />
-          </View>
+          </Flex>
           <ScrollView       backgroundColor="blue.10"  height="300px" className="my-scrollview amplify-text">
             {sectionText}
           </ScrollView>
-          <View>
+          <Flex>
+            <Text>Record your own voice here:</Text>
             <AudioRecorder 
               audioTrackConstraints={{
                 noiseSuppression: true,
@@ -243,48 +247,11 @@ export default function App() {
               }}
               showVisualizer={true}
 
-              onRecordingComplete={(blob) => addAudioElement(blob)}
+              onRecordingComplete={(blob) => createNote(blob)}
               recorderControls={recorderControls}
             />
-          </View>
+          </Flex>
       
-          <View as="form" margin="3rem 0" onSubmit={createNote}>
-            <Flex
-              direction="column"
-              justifyContent="center"
-              gap="2rem"
-              padding="2rem"
-            >
-              <TextField
-                name="name"
-                placeholder="Note Name"
-                label="Note Name"
-                labelHidden
-                variation="quiet"
-                required
-              />
-              <TextField
-                name="description"
-                placeholder="Note Description"
-                label="Note Description"
-                labelHidden
-                variation="quiet"
-                required
-              />
-
-              <View
-                name="image"
-                as="input"
-                type="file"
-                alignSelf={"end"}
-                accept="image/png, image/jpeg"
-              />
-
-              <Button type="submit" variation="primary">
-                Create Note
-              </Button>
-            </Flex>
-          </View>
           <Divider />
           <Heading level={2}>Current Notes</Heading>
           <Grid
@@ -310,13 +277,7 @@ export default function App() {
                   <Heading level="3">{note.name}</Heading>
                 </View>
                 <Text fontStyle="italic">{note.description}</Text>
-                {note.image && (
-                  <Image
-                    src={note.image}
-                    alt={`visual aid for ${notes.name}`}
-                    style={{ width: 400 }}
-                  />
-                )}
+                <audio controls src={note.image}></audio>
                 <Button
                   variation="destructive"
                   onClick={() => deleteNote(note)}
