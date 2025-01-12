@@ -6,8 +6,16 @@ import { storage } from './storage/resource';
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
  */
-defineBackend({
+const backend = defineBackend({
   auth,
   data,
-  storage
+  storage,
 });
+
+
+// backend.addOutput({
+//   storage: {
+//     aws_region: "us-east-2",
+//     bucket_name: "book-media-v1"
+//   },
+// });
