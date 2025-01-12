@@ -47,8 +47,9 @@ export default function App() {
   async function fetchNotes() {
     const { data: notes } = await client.models.Note.list();
     const partName = strip_extension(partJsonFile)
+    const local_notes = notes.filter((n)=>(n.name == partName && n.description == sectionSel))
     await Promise.all(
-      notes.map(async (note) => {
+      local_notes.map(async (note) => {
         if (note.image) {
           const linkToStorageFile = await getUrl({
             path: ({ identityId }) => `user_media/${identityId}/${partName}/${sectionSel}/${note.image}`,
@@ -60,8 +61,8 @@ export default function App() {
         return note;
       })
     );
-    console.log(notes);
-    setNotes(notes);
+    console.log(local_notes);
+    setNotes(local_notes);
   }
 
   useEffect(() => {
