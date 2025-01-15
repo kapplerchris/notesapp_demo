@@ -20,6 +20,13 @@ import { getUrl } from "aws-amplify/storage";
 import { uploadData, downloadData } from "aws-amplify/storage";
 import { generateClient } from "aws-amplify/data";
 import { Parser } from "html-to-react";
+import {
+  ThemeProvider,
+  defaultDarkModeOverride,
+  Card,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@aws-amplify/ui-react';
 
 import outputs from "../amplify_outputs.json";
 /**
@@ -43,6 +50,13 @@ export default function App() {
   const [sectionSel, setSectionSel] = useState('');
   const [sectionText, setSectionText] = useState([]);
 
+
+  const [colorMode, setColorMode] = useState('system');
+  const theme = {
+      name: 'my-theme',
+      overrides: [defaultDarkModeOverride],
+  };
+    
 
   async function fetchNotes() {
     const { data: notes } = await client.models.Note.list();
@@ -209,8 +223,10 @@ export default function App() {
   };
 
   return (
+    <ThemeProvider theme={theme} colorMode={colorMode}>
     <Authenticator>
       {({ signOut }) => (
+        <Card>
         <Flex
           className="App"
           justifyContent="center"
@@ -219,13 +235,17 @@ export default function App() {
           width="70%"
           margin="0 auto"
         >
-          <Heading level={1}>THE SOUND OF FRENCH</Heading>
+        <Heading level={1}>THE SOUND OF FRENCH</Heading>
           <Flex>
             <PartsSelectField />
             <ExerciseSelectField />
           </Flex>
-          <ScrollView       backgroundColor="blue.10"  height="300px" className="my-scrollview amplify-text">
+          <ScrollView  height="300px" >
+            <Card class="my-scrollview"> 
+            <Text variation="primary">
             {sectionText}
+            </Text>
+            </Card>
           </ScrollView>
           <Flex>
             <Text>Record your own voice here:</Text>
@@ -252,7 +272,6 @@ export default function App() {
               recorderControls={recorderControls}
             />
           </Flex>
-      
           <Divider />
           <Heading level={2}>Current Notes</Heading>
           <Grid
@@ -289,8 +308,23 @@ export default function App() {
             ))}
           </Grid>
           <Button onClick={signOut}>Sign Out</Button>
+          <Card>
+            <ToggleButtonGroup
+              value={colorMode}
+              isExclusive
+              onChange={(value) => setColorMode(value)}
+            >
+              <ToggleButton value="light">Light</ToggleButton>
+              <ToggleButton value="dark">Dark</ToggleButton>
+              <ToggleButton value="system">System</ToggleButton>
+            </ToggleButtonGroup>
+            <Text>Current color mode: {colorMode}</Text>
+          </Card>
+
         </Flex>
+        </Card>
       )}
-    </Authenticator>
+      </Authenticator>
+    </ThemeProvider>
   );
 }

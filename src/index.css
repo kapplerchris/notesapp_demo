@@ -1,37 +1,23 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
-  color: rgba(255, 255, 255, 0.87);
+@import "@aws-amplify/ui-react/styles.css"; 
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.my-scrollview {
+  /* background-color: var(--amplify-components-message-filled-info-background-color); */
+  background-color: var(--amplify-components-button-focus-background-color);
+  padding: 0.3rem;
+  /* background-color: var(---amplify-components-togglebutton-primary-hover-background-color); */
+ }
 
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.box:nth-child(3n + 1) {
-  grid-column: 1;
-}
-.box:nth-child(3n + 2) {
-  grid-column: 2;
-}
-.box:nth-child(3n + 3) {
-  grid-column: 3;
+.sound-click {
+  /* background-color: var(--first-color); */
+  /* color: var(--second-color); */
+  /* border: 1px solid #e0e0e0; */
+  /* border: 1px solid var(--amplify-colors-blue-10); */
+  background-color: var(--amplify-components-button-select-background-color);
+  /* cursor: url("/mouse-circle-svgrepo-com.svg") 10 10, auto; */
+  /* cursor: url("/speeker.svg") 10 10, auto; */
+  cursor:cell;
+  user-select: none;
 }
 
 

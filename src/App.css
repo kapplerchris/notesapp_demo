@@ -1,3 +1,4 @@
+/* 
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -39,12 +40,4 @@
 
 .read-the-docs {
   color: #888;
-}
-
-.my-scrollview {
-  height: 300px;
-  padding: var(--amplify-space-medium);
-  color: #000;
-  background-color: var(--amplify-colors-blue-10);
-  border: 1px solid black;
-}
+} */
