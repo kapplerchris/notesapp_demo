@@ -1,10 +1,16 @@
 
 @import "@aws-amplify/ui-react/styles.css"; 
 
+/* #root, [data-amplify-theme] {
+  padding: 2rem;
+} */
+
+
 .my-scrollview {
   /* background-color: var(--amplify-components-message-filled-info-background-color); */
   background-color: var(--amplify-components-button-focus-background-color);
   padding: 0.3rem;
+  user-select: none;
   /* background-color: var(---amplify-components-togglebutton-primary-hover-background-color); */
  }
 
@@ -13,11 +19,10 @@
   /* color: var(--second-color); */
   /* border: 1px solid #e0e0e0; */
   /* border: 1px solid var(--amplify-colors-blue-10); */
-  background-color: var(--amplify-components-button-select-background-color);
+  background-color: var(--amplify-components-button-active-background-color);
   /* cursor: url("/mouse-circle-svgrepo-com.svg") 10 10, auto; */
   /* cursor: url("/speeker.svg") 10 10, auto; */
   cursor:cell;
-  user-select: none;
 }
 
 

@@ -6,8 +6,8 @@ export const storage = defineStorage({
     "user_media/{entity_id}/*": [
       allow.entity("identity").to(["read", "write", "delete"]),
     ],
-    'book_audio/*': [
-      allow.guest.to(['read']) // additional actions such as "write" and "delete" can be specified depending on your use case
+    'audio_files/*': [
+      allow.authenticated.to(['read']) // additional actions such as "write" and "delete" can be specified depending on your use case
     ],
     'book_json/*': [
       allow.authenticated.to(['read']) // additional actions such as "write" and "delete" can be specified depending on your use case

@@ -19,7 +19,6 @@ import "@aws-amplify/ui-react/styles.css";
 import { getUrl } from "aws-amplify/storage";
 import { uploadData, downloadData } from "aws-amplify/storage";
 import { generateClient } from "aws-amplify/data";
-import { Parser } from "html-to-react";
 import {
   ThemeProvider,
   defaultDarkModeOverride,
@@ -27,6 +26,10 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@aws-amplify/ui-react';
+
+import {Spoken} from "./Spoken.jsx"
+import JsxParser from 'react-jsx-parser'
+
 
 import outputs from "../amplify_outputs.json";
 /**
@@ -57,7 +60,6 @@ export default function App() {
       overrides: [defaultDarkModeOverride],
   };
     
-
   async function fetchNotes() {
     const { data: notes } = await client.models.Note.list();
     const partName = strip_extension(partJsonFile)
@@ -195,14 +197,16 @@ export default function App() {
 
   // body of exercise
 
-  const htmlParser = new Parser();
 
   useEffect(() => {
     const paraArray = partJson[sectionSel];
     if (Array.isArray(paraArray)) {
       // console.log(paraArray.join("\n"));
       setSectionText(
-        htmlParser.parse(paraArray.join("\n"))
+          <JsxParser
+            components={{ Spoken }}
+            jsx={paraArray.join("\n")}
+          />
       );
     } else {
       setSectionText(<p>Select a section</p>);
